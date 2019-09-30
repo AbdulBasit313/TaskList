@@ -1,0 +1,3 @@
+{
+   "mongoURI": "mongodb+srv://basit123:basit123@cluster0-aisik.mongodb.net/test?retryWrites=true&w=majority"
+}
