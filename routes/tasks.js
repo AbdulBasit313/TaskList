@@ -26,6 +26,7 @@ router.get('/:id', async (req, res) => {
 
 // create task
 router.post('/', async (req, res) => {
+   console.log('task', req.body)
    const task = new Task({
       task: req.body.task
    })
