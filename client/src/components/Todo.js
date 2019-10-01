@@ -29,8 +29,12 @@ class Todo extends Component {
    onSubmitTask = (e) => {
       e.preventDefault();
       const { task } = this.state
+      const newTask = {
+         task: this.state.task
+      }
       if (task.trim().length > 0) {
-         this.props.dispatch(addTodo(task))
+         this.props.dispatch(addTodo(newTask))
+         console.log('called addtodo')
          this.setState({
             task: ""
          });

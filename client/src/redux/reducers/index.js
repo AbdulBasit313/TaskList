@@ -14,7 +14,7 @@ const todoReducer = (state = initState, action) => {
          console.log('add todo reducer')
          return {
             ...state,
-            taskList: [{ todo: action.payload, id: uuid(), completed: false }, ...state.taskList]
+            taskList: [action.payload, ...state.taskList]
          }
       case 'DELETE_TODO':
          return {

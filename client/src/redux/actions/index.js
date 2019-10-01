@@ -1,7 +1,6 @@
 import axios from 'axios'
 
 export const getTodo = () => (dispatch) => {
-   console.log('action called')
    let url = "http://localhost:5000/api/tasks/";
    axios
       .get(url)
@@ -12,20 +11,41 @@ export const getTodo = () => (dispatch) => {
          })
          console.log('data', res.data)
       })
-      .catch((error) => {
-         console.log(error);
+      .catch((err) => {
+         console.log(err);
       });
 };
 
-export const addTodo = (data) => ({
-   type: "ADD_TODO",
-   payload: data
-});
+export const addTodo = (task) => (dispatch) => {
+   console.log('action called')
+   let url = "http://localhost:5000/api/tasks/";
+   axios
+      .post(url, task)
+      .then((res) => {
+         dispatch({
+            type: 'ADD_TODO',
+            payload: res.data
+         })
+      })
+      .catch((err) => {
+         console.log(err);
+      })
+};
 
-export const deleteTodo = (data) => ({
-   type: "DELETE_TODO",
-   payload: data
-});
+export const deleteTodo = (id) => (dispatch) => {
+   let url = "http://localhost:5000/api/tasks/"
+   axios
+      .delete(url + id)
+      .then((res) => {
+         dispatch({
+            type: "DELETE_TODO",
+            payload: id
+         })
+      })
+      .catch((err) => {
+         console.log(err);
+      })
+};
 
 export const editTodo = (data) => ({
    type: "DELETE_TODO",
