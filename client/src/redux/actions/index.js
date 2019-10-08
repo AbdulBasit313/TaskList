@@ -2,6 +2,7 @@ import axios from 'axios'
 
 export const getTodo = () => (dispatch) => {
    let url = "http://localhost:5000/api/tasks/";
+   dispatch(setTodoLoading())
    axios
       .get(url)
       .then((res) => {
@@ -9,7 +10,6 @@ export const getTodo = () => (dispatch) => {
             type: "GET_TODO",
             payload: res.data
          })
-         console.log('data', res.data)
       })
       .catch((err) => {
          console.log(err);
@@ -17,11 +17,10 @@ export const getTodo = () => (dispatch) => {
 };
 
 export const addTodo = (task) => (dispatch) => {
-   console.log('action called')
    let url = "http://localhost:5000/api/tasks/";
    axios
       .post(url, task)
-      .then((res) => {
+      .then(res => {
          dispatch({
             type: 'ADD_TODO',
             payload: res.data
@@ -39,7 +38,7 @@ export const deleteTodo = (id) => (dispatch) => {
       .then((res) => {
          dispatch({
             type: "DELETE_TODO",
-            payload: id
+            payload: res.data
          })
       })
       .catch((err) => {
@@ -47,12 +46,30 @@ export const deleteTodo = (id) => (dispatch) => {
       })
 };
 
-export const editTodo = (data) => ({
-   type: "DELETE_TODO",
-   payload: data
-});
+export const updateTodo = (id, task) => (dispatch) => {
+   console.log('task in update', task)
+   let url = "http://localhost:5000/api/tasks/"
+   axios
+      .put(url + id, task)
+      .then((res) => {
+         dispatch({
+            type: "UPDATE_TODO",
+            payload: res.data
+         })
+         console.log('updated', res.data)
+      })
+      .catch((err) => {
+         console.log(err);
+      })
+};
 
 export const toggleCheckbox = (data) => ({
    type: "TOGGLE_TODO",
    payload: data
 });
+
+export const setTodoLoading = () => {
+   return {
+      type: 'SET_LOADING'
+   }
+}

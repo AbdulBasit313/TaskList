@@ -1,17 +1,14 @@
-import uuid from 'uuid/v4'
-
-
 let initState = {
    taskList: [],
+   loading: false
 };
 
 const todoReducer = (state = initState, action) => {
    switch (action.type) {
       case "GET_TODO":
-         return { taskList: action.payload }
+         return { taskList: action.payload, loading: false }
 
       case "ADD_TODO":
-         console.log('add todo reducer')
          return {
             ...state,
             taskList: [action.payload, ...state.taskList]
@@ -19,7 +16,16 @@ const todoReducer = (state = initState, action) => {
       case 'DELETE_TODO':
          return {
             ...state,
-            taskList: state.taskList.filter(item => item.id !== action.payload)
+            taskList: state.taskList.filter(item => item._id !== action.payload._id)
+         }
+      case 'UPDATE_TODO':
+         console.log('action.payload', action.payload)
+         return {
+            ...state,
+            taskList: state.taskList.map(item => {
+               if (item._id !== action.payload._id) return item
+               return { ...item, ...action.payload }
+            })
          }
       case 'TOGGLE_TODO':
          return {
@@ -28,6 +34,11 @@ const todoReducer = (state = initState, action) => {
                if (item.id !== action.payload) return item
                return { ...item, completed: !item.completed }
             })
+         }
+      case 'SET_LOADING':
+         return {
+            ...state,
+            loading: true
          }
 
       default:

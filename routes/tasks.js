@@ -26,7 +26,6 @@ router.get('/:id', async (req, res) => {
 
 // create task
 router.post('/', async (req, res) => {
-   console.log('task', req.body)
    const task = new Task({
       task: req.body.task
    })
@@ -60,7 +59,7 @@ router.put('/:id', async (req, res) => {
          }
       )
       res.json(task)
-   } catch (error) {
+   } catch (err) {
       res.status(400).json({ message: err.message })
    }
 })
