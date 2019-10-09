@@ -6,6 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane, faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons'
 import Loading from "./Loading";
+import Swal from 'sweetalert2'
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 
 class Todo extends Component {
@@ -14,7 +16,8 @@ class Todo extends Component {
       this.state = {
          task: "",
          id: null,
-         isEditing: false
+         isEditing: false,
+         isCompleted: false
       };
    }
 
@@ -42,12 +45,28 @@ class Todo extends Component {
    };
 
    handleDelete = (id) => {
-      this.props.dispatch(deleteTodo(id))
+      Swal.fire({
+         title: 'Are you sure?',
+         text: "You won't be able to revert this!",
+         type: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+         if (result.value) {
+            this.props.dispatch(deleteTodo(id))
+            Swal.fire(
+               'Deleted!',
+               'Your file has been deleted.',
+               'success'
+            )
+         }
+      })
    }
 
    handleUpdate = (e) => {
       e.preventDefault();
-      console.log('this.state.id', this.state.id, 'this.state.task', this.state.task)
       const editTask = {
          task: this.state.task
       }
@@ -63,16 +82,20 @@ class Todo extends Component {
       })
    }
 
-   toggleCheckboxChange = (id) => {
-      this.props.dispatch(toggleCheckbox(id))
+   toggleCheckboxChange = (id, isCompleted) => {
+      console.log('clicked')
+      const toggleTodo = {
+         isCompleted: !isCompleted
+      }
+      this.props.dispatch(toggleCheckbox(id, toggleTodo))
    }
 
    render() {
       const { task, isEditing } = this.state;
       const { taskList } = this.props;
-      console.log('isEditing', isEditing)
+      // console.log('isEditing', isEditing)
       return (
-         <div>
+         <div className='app'>
             <h1 style={{ textAlign: 'center' }}>Todo App</h1>
             <Form
                onSubmit={!isEditing ? this.onSubmitTask : this.handleUpdate}
@@ -94,22 +117,33 @@ class Todo extends Component {
                <div>
                   {taskList.length ? taskList.map(({ _id, task, isCompleted }) => {
                      return (
-                        <Card key={_id}>
-                           <CardBody style={{ display: 'flex' }}>
-                              <label htmlFor="" style={{ display: 'flex' }}>
-                                 <input
-                                    type="checkbox"
-                                    checked={isCompleted}
-                                    onChange={this.toggleCheckboxChange.bind(this, _id)}
-                                 />
-                                 <CardText style={{ textDecoration: isCompleted ? 'line-through' : null }}>{task}</CardText>
-                              </label>
-                              <FontAwesomeIcon
-                                 icon={faTrashAlt} style={{ marginLeft: 10, color: 'red' }}
-                                 onClick={this.handleDelete.bind(this, _id)} />
-                              <FontAwesomeIcon
-                                 icon={faEdit} style={{ marginLeft: 10, color: 'red' }}
-                                 onClick={this.getValues.bind(this, task, _id)} />
+                        <Card key={_id} style={{ marginBottom: 10 }}>
+                           <CardBody style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                              <div>
+                                 <div className="round">
+                                    <label className="checkbox">
+                                       <input
+                                          style={{ borderRadius: '50%' }}
+                                          // className='checkbox-shape'
+                                          type="checkbox"
+                                          id="checkbox"
+                                          checked={isCompleted}
+                                          onChange={this.toggleCheckboxChange.bind(this, _id, isCompleted)}
+                                       />
+                                    </label>
+                                 </div>
+                                 <CardText className={isCompleted ? 'checkbox' : null} style={{ marginLeft: 15, marginBottom: 15 }}>{task}</CardText>
+                              </div>
+                              <div>
+                                 <FontAwesomeIcon
+                                    icon={faTrashAlt}
+                                    style={{ marginLeft: 10, color: 'tomato', fontSize: 15, cursor: 'pointer' }}
+                                    onClick={this.handleDelete.bind(this, _id)} />
+                                 <FontAwesomeIcon
+                                    icon={faEdit}
+                                    style={{ marginLeft: 10, color: '#ccc', fontSize: 15, cursor: 'pointer' }}
+                                    onClick={this.getValues.bind(this, task, _id)} />
+                              </div>
                            </CardBody>
                         </Card>
                      )
@@ -117,7 +151,7 @@ class Todo extends Component {
                   }
                </div>
             </div>
-         </div>
+         </div >
       );
    }
 }

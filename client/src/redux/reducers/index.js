@@ -31,8 +31,8 @@ const todoReducer = (state = initState, action) => {
          return {
             ...state,
             taskList: state.taskList.map(item => {
-               if (item.id !== action.payload) return item
-               return { ...item, completed: !item.completed }
+               if (item._id !== action.payload._id) return item
+               return { ...item, isCompleted: !item.isCompleted }
             })
          }
       case 'SET_LOADING':
