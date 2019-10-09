@@ -8,7 +8,7 @@ import { faPaperPlane, faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-ic
 import Loading from "./Loading";
 import Swal from 'sweetalert2'
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-
+import Checkbox from '@material-ui/core/Checkbox'
 
 class Todo extends Component {
    constructor(props) {
@@ -120,20 +120,26 @@ class Todo extends Component {
                         <Card key={_id} style={{ marginBottom: 10 }}>
                            <CardBody style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                               <div>
-                                 <div className="round">
-                                    <label className="checkbox">
-                                       <input
-                                          style={{ borderRadius: '50%' }}
-                                          // className='checkbox-shape'
-                                          type="checkbox"
-                                          id="checkbox"
-                                          checked={isCompleted}
-                                          onChange={this.toggleCheckboxChange.bind(this, _id, isCompleted)}
-                                       />
-                                    </label>
-                                 </div>
-                                 <CardText className={isCompleted ? 'checkbox' : null} style={{ marginLeft: 15, marginBottom: 15 }}>{task}</CardText>
+                                 <label className="checkbox">
+                                    {/* <input
+                                       style={{ borderRadius: '50%' }}
+                                       // className='checkbox-shape'
+                                       type="checkbox"
+                                       id="checkbox"
+                                       checked={isCompleted}
+                                       onChange={this.toggleCheckboxChange.bind(this, _id, isCompleted)}
+                                    /> */}
+                                    <Checkbox
+                                       checked={isCompleted}
+                                       onChange={this.toggleCheckboxChange.bind(this, _id, isCompleted)}
+                                       // value="checkedA"
+                                       inputProps={{
+                                          'aria-label': 'primary checkbox',
+                                       }}
+                                    />
+                                 </label>
                               </div>
+                              <CardText className={isCompleted ? 'checkbox' : null} style={{ marginLeft: 15, marginBottom: 15 }}>{task}</CardText>
                               <div>
                                  <FontAwesomeIcon
                                     icon={faTrashAlt}
